@@ -1,5 +1,13 @@
 # wantedPreonboarding
 
+npm install 진행하여 프레임워크, 라이브러리 설치후
+index.js 혹은 해당 디렉토리 실행하여 시작.
+
+
+"cookie-parser": "^1.4.5",
+"crypto-random-string": "^3.3.1",
+"express": "^4.17.1",
+"sqlite3": "^5.0.2"
 
 
 사용자 관리
