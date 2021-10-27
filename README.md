@@ -13,7 +13,7 @@
   이를 통해 사용자 인증을 확인하고, 이후의 작업을 처리.
   
   
- endpoint 호출
+ endpoint 호출 및 api 
  프로토콜 : http
  기본 포트 : 8000
  content-type : application/json
@@ -24,6 +24,12 @@
                 "id" : 사용자 ID (STRING)
                 "pw" : 사용자 Password (STRING)
               }
+     RESPONSE
+     code :
+      201 - 회원가입 완료
+      400 - payload 누락
+      404 - 데이터베이스 상에서 오류(이미 등록된 회원, 자료형 불일치)
+      
   /signin
     POST : 회원 로그인 수행   
       REQUEST
@@ -31,6 +37,12 @@
                 "id" : 사용자 ID (STRING)
                 "pw" : 사용자 Password (STRING)
               }
+     RESPONSE
+     code :
+      201 - 로그인 완료
+      400 - payload 누락
+      404 - 데이터베이스 상에서 오류(등록되지 않은 회원, 자료형 불일치)
+      
   /board
     POST : 게시글 작성    
       REQUEST
@@ -40,19 +52,47 @@
                 "head" : 게시글 말머리 (STRING, NULLABLE)
                 "main" : 게시글 본문 (STRING)                
               }
+      RESPONSE
+       code :
+        201 - 작성 완료
+        400 - payload 누락
+        401 - 인증 불일치
+        404 - 데이터베이스 상에서 오류(자료형 불일치)
+        
     GET : 게시글 목록, 본문 조회
       REQUEST
       body :  {
                 "id" : 사용자 ID (STRING)
-                "page" : 게시판 페이지 (INTEGER, NULLABLE, DEFAULT 1)
-                "size" : 게시판 페이지 크기 (INTEGER, NULLABLE, DEFAULT 10)                
+                "page" : 게시판 페이지 (INTEGER, NULLABLE, DEFAULT 1, > 0)
+                "size" : 게시판 페이지 크기 (INTEGER, NULLABLE, DEFAULT 10, > 0)                
               }
+      RESPONSE
+       code :
+        200 - 작성 완료
+        401 - 인증 불일치
+        404 - 데이터베이스 상에서 오류(자료형 불일치)
+      
+      payload :
+        해당 범위의 게시글 목록 및 본문.
+        num - 게시글 번호
+        author - 작성자
+        title - 제목
+        head - 말머리
+        main - 본문
+        time - 등록 시각
+              
     DELETE : 게시글 삭제
       REQUEST
       body :  {
                 "id" : 사용자 ID (STRING)
                 "num" : 게시글 번호 (INTEGER)         
               }
+      RESPONSE
+       code :
+        202 - 삭제 대기중
+        401 - 인증 불일치
+        404 - 데이터베이스 상에서 오류(자료형 불일치)
+              
     PUT : 게시글 수정
       REQUEST
       body :  {
@@ -64,3 +104,8 @@
                               "main" : 변경 본문 (STRING, NULLABLE)     
                             } : 변경사항
               }
+      RESPONSE
+       code :
+        202 - 변경 완료
+        401 - 인증 불일치
+        404 - 데이터베이스 상에서 오류(자료형 불일치)
